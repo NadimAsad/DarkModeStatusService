@@ -3,15 +3,21 @@
 #if defined(WIN32)
 #include <winrt/Windows.UI.ViewManagement.h>
 #include <winrt/Windows.Foundation.h>
+#include <QObject>
 
 using winrt::Windows::Foundation::IInspectable;
 using winrt::Windows::UI::ViewManagement::UISettings;
 
-class DarkModeDetection {
+class DarkModeDetection : public QObject {
+  Q_OBJECT
+
+signals:
+  void darkModeStatusChanged(bool isDarkMode);
+
 private:
-  bool m_isDarkMode;
+  bool m_lastDarkModeStatus;
   UISettings m_uiSet;
-  void printCurrentDarkModeStatus();
+  bool isDarkMode();
   void onThemeChange(UISettings const&, IInspectable const&);
 
 public:

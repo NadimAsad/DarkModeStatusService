@@ -1,32 +1,22 @@
 #include "DarkModeDetection.hxx"
-#include <iostream>
 
 using winrt::Windows::UI::Colors;
 using winrt::Windows::UI::ViewManagement::UIColorType;
 
 void DarkModeDetection::onThemeChange(UISettings const&, IInspectable const&) {
-  auto newStatus = this->m_uiSet.GetColorValue(UIColorType::Background) == Colors::Black() && this->m_uiSet.GetColorValue(UIColorType::Foreground) == Colors::White();
+  auto newStatus = this->isDarkMode();
 
-  if (this->m_isDarkMode != newStatus) {
-    this->m_isDarkMode = newStatus;
-    this->printCurrentDarkModeStatus();
+  if (this->m_lastDarkModeStatus != newStatus) {
+    this->m_lastDarkModeStatus = newStatus;
+    emit this->darkModeStatusChanged(newStatus);
   }
 }
 
-void DarkModeDetection::printCurrentDarkModeStatus() {
-  std::cout << "Dark Mode: ";
-
-  if (this->m_isDarkMode)
-    std::cout << "Enabled!\n";
-  else
-    std::cout << "Disabled!\n";
+bool DarkModeDetection::isDarkMode() {
+  return this->m_uiSet.GetColorValue(UIColorType::Background) == Colors::Black() && this->m_uiSet.GetColorValue(UIColorType::Foreground) == Colors::White();
 }
 
 DarkModeDetection::DarkModeDetection() {
-  // Get current GetColorValue for Background & Foreground and check for dark mode
-  this->m_isDarkMode = this->m_uiSet.GetColorValue(UIColorType::Background) == Colors::Black() && this->m_uiSet.GetColorValue(UIColorType::Foreground) == Colors::White();
-  // Register event handler for UISettings::ColorValuesChanged
+  this->m_lastDarkModeStatus = this->isDarkMode();
   this->m_uiSet.ColorValuesChanged({this, &DarkModeDetection::onThemeChange});
-
-  this->printCurrentDarkModeStatus();
 }
