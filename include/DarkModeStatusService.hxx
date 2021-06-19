@@ -1,5 +1,5 @@
-#if !defined(DARK_MODE_DETECTION_HXX)
-#define DARK_MODE_DETECTION_HXX
+#if !defined(DARK_MODE_STATUS_SERVICE_HXX)
+#define DARK_MODE_STATUS_SERVICE_HXX
 #if defined(WIN32)
 #include <winrt/Windows.UI.ViewManagement.h>
 #include <winrt/Windows.Foundation.h>
@@ -8,7 +8,7 @@
 using winrt::Windows::Foundation::IInspectable;
 using winrt::Windows::UI::ViewManagement::UISettings;
 
-class DarkModeDetection : public QObject {
+class DarkModeStatusService : public QObject {
   Q_OBJECT
 
 signals:
@@ -21,8 +21,8 @@ private:
   void onThemeChange(UISettings const&, IInspectable const&);
 
 public:
-  DarkModeDetection();
+  DarkModeStatusService();
 };
 
 #endif // WIN32
-#endif // DARK_MODE_DETECTION_HXX
+#endif // DARK_MODE_STATUS_SERVICE_HXX

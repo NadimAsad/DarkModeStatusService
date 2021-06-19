@@ -1,31 +1,45 @@
 cmake_minimum_required(VERSION 3.19)
 
+project(DarkModeStatusService)
+
+find_package(Qt5 COMPONENTS Core REQUIRED)
+
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 if(WIN32)
+    # WinRT doesn't work with 20 currently. Investigate later
     set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+else()
+    set(CMAKE_CXX_STANDARD 20)
+endif()
 
-    project(DarkModeDetectionWIN32)
+qt_wrap_cpp(LIB_MOC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/DarkModeStatusService.hxx
+)
 
-    find_package(Qt5 COMPONENTS Core REQUIRED)
+add_library(${PROJECT_NAME}
+    ${LIB_MOC}
+)
 
-    qt_wrap_cpp(APP_MOC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/DarkModeDetection.hxx
-    )
+target_link_libraries(${PROJECT_NAME}
+PUBLIC
+    Qt5::Core
+)
 
-    add_executable(${PROJECT_NAME}
-        ${APP_MOC}
-        ${CMAKE_CURRENT_SOURCE_DIR}/source/main.cxx
-        ${CMAKE_CURRENT_SOURCE_DIR}/source/DarkModeDetection.cxx
+target_include_directories(${PROJECT_NAME}
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+if(WIN32)
+    target_sources(${PROJECT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/source/DarkModeStatusService_win32.cxx
     )
 
     target_link_libraries(${PROJECT_NAME}
-        PUBLIC
-            Qt5::Core
-            WindowsApp
+    PUBLIC
+        WindowsApp
     )
-
-    target_include_directories(${PROJECT_NAME}
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/include
-    )
+else()
+    message(FATAL_ERROR "WIN32 supported currently!")
 endif()

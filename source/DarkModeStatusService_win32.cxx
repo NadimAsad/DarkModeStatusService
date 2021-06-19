@@ -1,9 +1,9 @@
-#include "DarkModeDetection.hxx"
+#include "DarkModeStatusService.hxx"
 
 using winrt::Windows::UI::Colors;
 using winrt::Windows::UI::ViewManagement::UIColorType;
 
-void DarkModeDetection::onThemeChange(UISettings const&, IInspectable const&) {
+void DarkModeStatusService::onThemeChange(UISettings const&, IInspectable const&) {
   auto newStatus = this->isDarkMode();
 
   if (this->m_lastDarkModeStatus != newStatus) {
@@ -12,11 +12,11 @@ void DarkModeDetection::onThemeChange(UISettings const&, IInspectable const&) {
   }
 }
 
-bool DarkModeDetection::isDarkMode() {
+bool DarkModeStatusService::isDarkMode() {
   return this->m_uiSet.GetColorValue(UIColorType::Background) == Colors::Black() && this->m_uiSet.GetColorValue(UIColorType::Foreground) == Colors::White();
 }
 
-DarkModeDetection::DarkModeDetection() {
+DarkModeStatusService::DarkModeStatusService() {
   this->m_lastDarkModeStatus = this->isDarkMode();
-  this->m_uiSet.ColorValuesChanged({this, &DarkModeDetection::onThemeChange});
+  this->m_uiSet.ColorValuesChanged({this, &DarkModeStatusService::onThemeChange});
 }
