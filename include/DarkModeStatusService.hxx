@@ -21,7 +21,7 @@ private:
   void onThemeChange(UISettings const&, IInspectable const&);
 
 public:
-  DarkModeStatusService();
+  DarkModeStatusService(QObject *parent = nullptr);
 };
 
 #endif // WIN32

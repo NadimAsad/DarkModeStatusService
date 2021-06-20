@@ -16,7 +16,7 @@ bool DarkModeStatusService::isDarkMode() {
   return this->m_uiSet.GetColorValue(UIColorType::Background) == Colors::Black() && this->m_uiSet.GetColorValue(UIColorType::Foreground) == Colors::White();
 }
 
-DarkModeStatusService::DarkModeStatusService() {
+DarkModeStatusService::DarkModeStatusService(QObject *parent): QObject(parent) {
   this->m_lastDarkModeStatus = this->isDarkMode();
   this->m_uiSet.ColorValuesChanged({this, &DarkModeStatusService::onThemeChange});
 }
